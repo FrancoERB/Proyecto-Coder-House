@@ -7,7 +7,7 @@ let montoSolicitado = 0
 
 if (ingresosMensuales >= 70000) {
   alert(`Felicidades ${nombre}, usted está habilitado para acceder a un credito`)
-  montoSolicitado = parseInt(prompt(`Ingrese un monto que desea realizar`))
+  montoSolicitado = parseInt(prompt(`Ingrese un monto que desea obtener`))
   calcularInteres()
 
 
