@@ -1,62 +1,39 @@
-let nombre = prompt(`Ingrese su nombre y apellido`);
-let ingresosMensuales = parseInt(prompt(`Declare sus ingreses mensuales`))
-let interes = 0
-let montoTotal = 0
-let totalCuotas = 0
-let montoSolicitado = 0
-
-if (ingresosMensuales >= 70000) {
-  alert(`Felicidades ${nombre}, usted está habilitado para acceder a un credito`)
-  montoSolicitado = parseInt(prompt(`Ingrese un monto que desea obtener`))
-  calcularInteres()
-
-
-} else {
-  alert(`Usted no cumple los requisitos minimos para acceder a un credito.`)
-}
-
-// Funcion para validar cantidad de cuotas y calcular el interes //
-function calcularInteres() {
-
-  let coutas = parseInt(prompt(`Ingrese cantidad de coutas, pueden ser 3,6,9 o 12`))
-  while (coutas !== 3 && coutas !== 6 && coutas !== 9 && coutas !== 12) {
-    alert(`Ingrese una cantidad valida.`)
-    coutas = parseInt(prompt(`Ingrese cantidad de coutas`))
+const prestamos = []
+//método para mostrar alertas//
+const mostrarMensaje = (tipoDeMensaje, mensaje) => {
+  if (tipoDeMensaje === "success") {
+    alert(`Success: ${mensaje}`)
+  } else if (tipoDeMensaje === "error") {
+    alert(`Error: ${mensaje}`)
   }
-  switch (coutas) {
-    case (3):
-      interes = (montoSolicitado * 21) / 100
-      montoTotal = montoSolicitado + interes
-      totalCuotas = montoTotal / coutas
-      alert(`Felicidades, ${nombre} su prestamo por $${montoSolicitado} fue aprobado. El mismo se devolvera en ${coutas} cuotas de $${parseFloat(totalCuotas).toFixed(2)} final por mes, haciendo en total de $${montoTotal}`)
-      break
-
-    case (6):
-      interes = (montoSolicitado * 26) / 100
-      montoTotal = montoSolicitado + interes
-      totalCuotas = montoTotal / coutas
-      alert(`Felicidades, ${nombre} su prestamo por $${montoSolicitado} fue aprobado. El mismo se devolvera en ${coutas} cuotas de $${parseFloat(totalCuotas).toFixed(2)} final por mes, haciendo en total de $${montoTotal}`)
-      break
-
-    case (9):
-      interes = (montoSolicitado * 40) / 100
-      montoTotal = montoSolicitado + interes
-      totalCuotas = montoTotal / coutas
-      alert(`Felicidades, ${nombre} su prestamo por $${montoSolicitado} fue aprobado. El mismo se devolvera en ${coutas} cuotas de $${parseFloat(totalCuotas).toFixed(2)} final por mes, haciendo en total de $${montoTotal}`)
-      break
-
-    case (12):
-      interes = (montoSolicitado * 60) / 100
-      montoTotal = montoSolicitado + interes
-      totalCuotas = montoTotal / coutas
-      alert(`Felicidades, ${nombre} su prestamo por $${montoSolicitado} fue aprobado. El mismo se devolvera en ${coutas} cuotas de $${parseFloat(totalCuotas).toFixed(2)} final por mes, haciendo en total de $${montoTotal}`)
-      break
-  }
-
 }
+//Método para verificar si el cliente cumple con los requisitos para acceder a un credito//
+function verificarCliente() {
 
+  let NombreDeCliente = prompt("Ingrese su nombre completo")
+  let ingresosMensuales = parseFloat(prompt("Ingrese sus ingresos mensuales"))
 
-
-
-
-
+  if (ingresosMensuales < 70000) {
+    return mostrarMensaje("error", `${NombreDeCliente} Usted no está habilitado para acceder a un crédito`)
+  }
+  mostrarMensaje("success", `${NombreDeCliente} Usted está habilitado para acceder a un crédito`)
+  iniciarPrestamo(NombreDeCliente, 12)
+}
+//Método para calcular interes del prestamos y el total del mismo, tambien almacena los clientes en una lista. //
+const iniciarPrestamo = (cliente, interes) => {
+  const montoSolicitado = parseFloat(prompt(`${cliente} Ingresá el monto a solicitar`))
+  const cantidadCuotas = parseFloat(prompt(`${cliente} Ingresá la cantidad de cuotas 3,6,9 o 12`))
+  const total = (montoSolicitado * (interes * cantidadCuotas)) / 100 + montoSolicitado
+  const coutasMensuales = total / cantidadCuotas
+  mostrarMensaje("success", `Su prestamo fue aprobado, el total a pagar es: ${parseFloat(total).toFixed(2)} en ${cantidadCuotas} cuotas de: ${parseFloat(coutasMensuales).toFixed(2)}`)
+  prestamos.push({
+    cliente, montoSolicitado, cantidadCuotas, total, coutasMensuales
+  });
+  const respuesta = prompt("¿Desea solicitar otro prestamo? (S/N)")
+  if (respuesta === "S" || respuesta === "s") {
+    return verificarCliente()
+  } else {
+    console.table(prestamos)
+  }
+}
+verificarCliente()
