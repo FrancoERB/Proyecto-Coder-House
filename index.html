@@ -5,9 +5,66 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="home.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
   <title>Creditos Arg</title>
 </head>
 <body>
+  <header class="header">
+    <nav class="navBar">
+      <div class="logo"> 
+        <img src="logo.png" alt="">
+        <p>Créditos Argentina</p>
+      </div>
+      <div class="links">
+        <a href="#" class="link1"> INICIO </a>
+        <a href="#" class="link1"> PREGUNTAS FRECUENTES </a> 
+        <button id="btnIniciar">Iniciar sesion</button>
+        <button id="btnRegistrarse">Registrarse</button>
+      </div>
+    </nav>
+  </header>
+  <main class="main">   
+        <h1>SIMULA TU PRESTAMO</h1>
+        <h4>Datos Personales</h4>
+        <div id="inputs">
+           <label for="text">*Nombre Completo</label>
+           <input id="nombre" type="text">
+           <label for="text">*Ingresos Mensuales</label>
+           <input id="ingresosMensuales" type="number">
+           <label for="text">*DNI</label>
+           <input id="dni" type="number">
+           <div id="inputs2">
+            <label id="montoSolicitado" for="text">*Monto Solicitado</label>
+            <input id="inputMontoSolicitado" type="number">
+            <label id="labelCantCoutas" for="text">*Seleccione la cantidad de cuotas</label>
+            <select name="Cantidad de cuotas" id="selector">
+              <option value="3">3</option>
+              <option value="6">6</option>
+              <option value="9">9</option>
+              <option value="12">12</option>
+            </select>
+           </div>
+         </div>
+         <button id="btnSiguiente">Siguiente</button>
+        </div>
+
+        <!-- <div class="tableContainer">
+          <table cellspacing="5" cellpadding="5" border="5">
+            <tr>
+              <td>Nombre Completo</td>
+              <td>Monto solicitado</td>
+              <td>DNI</td>
+              <td>Cantidad de coutas</td>
+              <td>total</td>
+              <td>Coutas Mensuales</td>
+            </tr>        
+          </table>
+        </div> -->
+  </main>
+  <footer class="footer">
+
+  </footer>
   <script src="main.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 </body>
 </html>
