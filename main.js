@@ -6,10 +6,16 @@ const inputSalary = document.getElementById("ingresosMensuales");
 const inputDni = document.getElementById("dni");
 const inputRequestedAmount = document.getElementById("inputMontoSolicitado");
 const inputQuotes = document.getElementById("selector");
+const dolarText = document.getElementById("dolar")
 
-const prestamos = []
+let prestamos = []
 let dni = ""
-//método para mostrar alertas//
+
+document.addEventListener("DOMContentLoaded", function () {
+  getDolarApi()
+});
+
+//Funcion para mostrar alertas//
 const mostrarMensaje = (tipoDeMensaje, mensaje) => {
   if (tipoDeMensaje === "success") {
     Toastify({
@@ -38,24 +44,24 @@ const mostrarMensaje = (tipoDeMensaje, mensaje) => {
   }
 }
 
-//Metodo para adaptar los datos almacenados del cliente en la tabla
-function showData() {
-  for (let i in prestamos) {
+//Funcion para adaptar los datos almacenados del cliente en la tabla
+function showData(lista) {
+  for (let i in lista) {
     return `
     <tr>
-      <td>${prestamos[i].cliente}</td>
-      <td>${prestamos[i].montoSolicitado}</td>
-      <td>${prestamos[i].dni}</td>
-      <td>${prestamos[i].cantidadCuotas}</td>
-      <td>${prestamos[i].total}</td>
-      <td>${prestamos[i].coutasMensuales}</td>
+      <td>${lista[i].cliente}</td>
+      <td>${lista[i].montoSolicitado}</td>
+      <td>${lista[i].dni}</td>
+      <td>${lista[i].cantidadCuotas}</td>
+      <td>${lista[i].total}</td>
+      <td>${lista[i].coutasMensuales}</td>
     </tr> 
   `
   }
 }
 
 //Funcion que crea la tabla para mostrar datos de cliente
-function createTable() {
+function createTable(lista) {
   const contenedor = document.createElement("div")
   contenedor.classList.add("tableContainer")
   contenedor.setAttribute('id', 'table')
@@ -69,13 +75,13 @@ function createTable() {
     <th>total</th>
     <th>Coutas Mensuales</th>
   </tr>
-  ${showData()}
+  ${showData(lista)}
   </table>`
   mainContainer.appendChild(contenedor)
   showButton()
 }
 
-//Metodo que crea el boton para limpiar campos//
+//Funcion que crea el boton para limpiar campos//
 function showButton() {
   const botonLimpiar = document.createElement("button")
   botonLimpiar.classList.add("btnLimpiar")
@@ -84,8 +90,29 @@ function showButton() {
   mainContainer.appendChild(botonLimpiar)
 }
 
-//Método para verificar si el cliente cumple con los requisitos para acceder a un credito//
+//Funcion para obtener valor actual del dolar//
+const getDolarApi = async () => {
+  fetch("https://www.dolarsi.com/api/api.php?type=valoresprincipales")
+    .then((response) => response.json())
+    .then((data) => {
+      const { casa } = data[0]
+      dolarText.innerText = ` $${casa.compra}`
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+}
+
+//Funcion para evitar campos vacios//
+const isEmptyInput = () => {
+  return inputName.value.length > 0 && inputSalary.value.length > 0 && inputDni.value.length > 0 && inputRequestedAmount.value.length > 0
+}
+
+//Funcion para verificar si el cliente cumple con los requisitos para acceder a un credito//
 function verificarCliente() {
+  if (!isEmptyInput()) {
+    return mostrarMensaje("error", "No deje campos vacíos")
+  }
   let NombreDeCliente = inputName.value
   console.log(NombreDeCliente)
   let ingresosMensuales = inputSalary.value
@@ -97,7 +124,7 @@ function verificarCliente() {
   iniciarPrestamo(NombreDeCliente, 12)
 }
 
-//Método para calcular interes del prestamos y el total del mismo, tambien almacena los clientes en una lista. //
+//Funcion para calcular interes del prestamos y el total del mismo, tambien almacena los clientes en una lista. //
 const iniciarPrestamo = (cliente, interes) => {
   const montoSolicitado = parseInt(inputRequestedAmount.value)
   const cantidadCuotas = parseInt(inputQuotes.value)
@@ -108,10 +135,11 @@ const iniciarPrestamo = (cliente, interes) => {
     cliente, montoSolicitado, dni, cantidadCuotas, total, coutasMensuales
   });
   localStorage.setItem("listaDeClientes", JSON.stringify(prestamos))
-  createTable();
+  createTable(prestamos);
 }
 btn.addEventListener("click", verificarCliente)
 
+//Funcion para limpiar campos//
 const clearInputs = () => {
   inputName.value = ''
   inputDni.value = ''
@@ -119,5 +147,18 @@ const clearInputs = () => {
   inputRequestedAmount.value = ''
   inputSalary.value = ''
   document.getElementById('table').remove();
+  localStorage.clear()
 }
+
+//Funcion para obtener clientes de local storage//
+const getFromLocalStorage = () => {
+  const prestamos = localStorage.getItem("listaDeClientes");
+  const data = JSON.parse(prestamos)
+  if (data?.length > 0) {
+    createTable(data);
+  }
+}
+
+getFromLocalStorage()
+
 
